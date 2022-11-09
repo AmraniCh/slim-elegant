@@ -1,0 +1,13 @@
+{
+    "name": "chakir/slim-three-revive",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AmraniCh",
+            "email": "contact@amranich.dev"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
