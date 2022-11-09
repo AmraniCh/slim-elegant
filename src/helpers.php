@@ -1,11 +1,12 @@
 <?php
 
-if (!function_exists('config')) {
+if (!function_exists('env')) {
 
     /**
      * Get environnement variables.
      *
      * @param string $key
+     * @throws \LogicException
      * @return mixed
      */
     function env($key)
@@ -30,11 +31,15 @@ if (!function_exists('config')) {
 
         return $value;
     }
+}
+
+if (!function_exists('config')) {
 
     /**
      * Get configaration variables.
      *
      * @param string $key
+     * @throws \LogicException|\RuntimeException
      * @return mixed
      */
     function config($key)

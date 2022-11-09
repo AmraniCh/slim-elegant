@@ -8,7 +8,17 @@ return [
      * It very helpul to have a global variable that defines the application name
      * and require it whenver you need it in your application. 
      */
-    'app_name' => $_ENV['APP_NAME'],
+    'app_name' => env('APP_NAME'),
+
+    /**
+     * Debug mode.
+     * 
+     * When disabled the application deson't show any details about exception
+     * and just shows a friendly message to the user.
+     * 
+     * Note!! This option must disabled in production.
+     */
+    'app_debug' => env('APP_DEBUG'),
 
     /**
      * //////////////////////////////
