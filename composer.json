@@ -9,5 +9,7 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {
+        "slim/slim": "3.*"
+    }
 }
