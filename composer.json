@@ -10,6 +10,8 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "slim/slim": "3.*"
+        "slim/slim": "3.*",
+        "vlucas/phpdotenv": "^5.5",
+        "symfony/var-dumper": "^5.4"
     }
 }
