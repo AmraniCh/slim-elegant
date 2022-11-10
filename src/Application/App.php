@@ -11,15 +11,27 @@ class App extends SlimApp
     protected $basePath;
 
     /**
-     * @param ContainerInterface|array $container
+     * @param ContainerInterface|array|string $container
      * @param string $basePath
      * @throws \RuntimeException
      */
-    public function __construct(string $basePath, $container = [])
+    public function __construct($basePath, $container = null)
     {
         if (!$basePath | !is_dir($basePath)) {
             throw new \RuntimeException("The base application path given '$basePath' does not exist.");
         }
+
+        if (is_null($container)) {
+            $container = require($basePath . '/config/container.php');
+        } elseif (is_string($container)) {
+            if (!file_exists($container)) {
+                throw new \RuntimeException("Container settings file '$container' does not exist.");
+            }
+            $container = require($container);
+        } elseif (!$container instanceof ContainerInterface) {
+            throw new \RuntimeException("Container parameter type is invalid.");
+        }
+        
 
         parent::__construct($container);
         $this->basePath = $basePath;
@@ -29,11 +41,12 @@ class App extends SlimApp
      * Load environnement variables from the .env file.
      *
      * @param string $envFileDirectory the path of the directory where .env file is located.
-     * @return void
+     * @return self
      */
-    public function loadEnvironnement(string $envFileDirectory = '')
+    public function loadEnvironnement($envFileDirectory = '')
     {
         (\Dotenv\Dotenv::createMutable($envFileDirectory ?: $this->basePath))->load();
+        return $this;
     }
 
     /**
@@ -41,12 +54,28 @@ class App extends SlimApp
      * Slim container settings.
      * 
      * @param string $configFile
-     * @return void
+     * @return self
      */
-    public function initConfiguration(string $configFile = '')
+    public function initConfiguration($configFile = '')
     {
-        $settings  = $this->getContainer()->get("settings");
+        $container = $this->getContainer();
+        $settings  = $container->get("settings");
         $configs   = require $configFile ?: $this->basePath . '/config/app.php';
         $settings->replace(array_merge($settings->all(), $configs));
+
+        return $this;
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $container
+     * @return self
+     */
+    // public function setupContainer($container = '')
+    // {
+    //     $container = $this->getContainer();
+
+    //     return $this;
+    // }
 }

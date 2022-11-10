@@ -5,17 +5,15 @@ use Slim\Http\Response;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-// initialize the slim application
-$container = new Slim\Container();
-$app       = new App\Kernal\Application\App(dirname(__DIR__), $container);
+$app = new App\Kernal\Application\App(dirname(__DIR__));
 
 $app->loadEnvironnement();
 $app->initConfiguration();
 
-$app->get('/', function (Request $request, Response $response, array $args) {
+$app->get('/', function (Request $request, Response $response, array $args) use ($app) {
     return $response
         ->getBody()
-        ->write(config('app_name'));
+        ->write($app->getContainer()->get('generateQuoteService'));
 });
 
 // run the application
