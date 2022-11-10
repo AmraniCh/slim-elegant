@@ -13,6 +13,9 @@
         "symfony/var-dumper": "^5.4"
     },
     "autoload": {
+        "psr-4": {
+            "App\\Kernal\\": "src/"
+        },
         "files": [
             "src/helpers.php"
         ]
