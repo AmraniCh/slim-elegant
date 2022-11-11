@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Kernal\Application;
+namespace App\Kernal;
 
 use Psr\Container\ContainerInterface;
 use Slim\App as SlimApp;
@@ -32,8 +32,8 @@ class App extends SlimApp
             throw new \RuntimeException("Container parameter type is invalid.");
         }
         
+        parent::__construct($container ?: []);
 
-        parent::__construct($container);
         $this->basePath = $basePath;
     }
 
@@ -56,26 +56,27 @@ class App extends SlimApp
      * @param string $configFile
      * @return self
      */
-    public function initConfiguration($configFile = '')
+    public function loadConfiguration($configFile = '')
     {
-        $container = $this->getContainer();
-        $settings  = $container->get("settings");
+        $settings  = $this->getContainer()->get("settings");
         $configs   = require $configFile ?: $this->basePath . '/config/app.php';
         $settings->replace(array_merge($settings->all(), $configs));
-
         return $this;
     }
 
     /**
-     * Undocumented function
-     *
-     * @param string $container
+     * @param string $routesFile
+     * @throw \RuntimeException
      * @return self
      */
-    // public function setupContainer($container = '')
-    // {
-    //     $container = $this->getContainer();
-
-    //     return $this;
-    // }
+    public function loadRoutes($routesFile = '')
+    {
+        $routesFile = $routesFile ?: $this->basePath . '/routes.php';
+        if (!file_exists($routesFile)) {
+            throw new \RuntimeException("Routes file '$routesFile' does not exist.");
+        }
+        $app = $this;
+        require($routesFile);
+        return $app;
+    }
 }
