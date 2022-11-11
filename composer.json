@@ -10,7 +10,8 @@
     "require": {
         "slim/slim": "3.*",
         "vlucas/phpdotenv": "^5.5",
-        "symfony/var-dumper": "^5.4"
+        "symfony/var-dumper": "^5.4",
+        "filp/whoops": "^2.14"
     },
     "autoload": {
         "psr-4": {

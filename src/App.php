@@ -32,6 +32,12 @@ class App extends SlimApp
             throw new \RuntimeException("Container parameter type is invalid.");
         }
 
+        if ($container) {
+            // remove the Slim error handlers 
+            // unset($container['errorHandler']);
+            // unset($container['phpErrorHandler']);
+        }
+
         parent::__construct($container ?: []);
 
         $this->basePath = $basePath;
