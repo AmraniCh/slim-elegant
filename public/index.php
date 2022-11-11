@@ -9,17 +9,13 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 // indicating a special container file location.
 $app = new App\Kernal\App(dirname(__DIR__));
 
-// loaders
-foreach([
-    'loadEnvironnement', 
-    'loadConfiguration', 
-    'loadRoutes', 
-    'loadMiddlewares'
-    ] as $method) {
-    call_user_func([$app, $method]);
-}
-
-// dd($app->getContainer()->get('errorHandler'));
+// do the magic
+$app
+    ->loadEnvironnement()
+    ->loadConfiguration()
+    ->loadEloquent()
+    ->loadRoutes()
+    ->loadMiddlewares();
 
 // run the application
 $app->run();

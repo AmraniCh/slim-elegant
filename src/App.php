@@ -103,9 +103,19 @@ class App extends SlimApp
         }
         $app = $this;
         $middlewares = require($middlewaresFile);
-        foreach($middlewares as $middleware) {
+        foreach ($middlewares as $middleware) {
             $app->add($middleware);
         }
         return $app;
+    }
+
+    public function loadEloquent()
+    {
+        $capsule = new \Illuminate\Database\Capsule\Manager;
+        $capsule->addConnection($this->getContainer()->get('settings')['database']);
+        $resolver = new \Illuminate\Database\ConnectionResolver(['default' => $capsule->getConnection()]);
+        $resolver->setDefaultConnection('default');
+        \Illuminate\Database\Eloquent\Model::setConnectionResolver($resolver);
+        return $this;
     }
 }
