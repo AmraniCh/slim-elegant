@@ -1,3 +1,6 @@
 vendor
 composer.lock
 .env
+cache/**
+!cache/blade
+!cache/blade/.keep
