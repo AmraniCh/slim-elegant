@@ -34,6 +34,21 @@ return [
     ],
 
     /**
+     * Specify where views templates are located.
+     */
+    'views_path' => $app->getBasePath() . '/resources/views',
+
+    /**
+     * The base cache path. 
+     */
+    'cache_path' => $app->getBasePath() . '/cache',
+
+    /**
+     * Blade cache path.
+     */
+    'blade_cache_path' => $app->getBasePath() . '/cache/blade',
+
+    /**
      * //////////////////////////////
      * Slim application configuration
      * //////////////////////////////

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Kernal;
+namespace App\kernel;
 
 use Whoops\Run;
 use Slim\Http\Request;
@@ -58,8 +58,7 @@ class Whoops extends AbstractHandler
 	}
 
 	/**
-	 * Gets the appropriate Whoops handler for the incoming request's 
-	 * content type as specified by the header "accept" 
+	 * Gets the appropriate Whoops handler for the incoming request's content type as specified by the header "accept" 
 	 *
 	 * @param Request $request
 	 * @return string

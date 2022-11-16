@@ -8,15 +8,18 @@
     }],
     "minimum-stability": "stable",
     "require": {
+        "php": ">=7.1",
         "slim/slim": "3.*",
         "vlucas/phpdotenv": "^5.5",
         "symfony/var-dumper": "^5.4",
         "filp/whoops": "^2.14",
-        "illuminate/database": "^8.83"
+        "illuminate/database": "^8.83",
+        "jenssegers/blade": "^1.4"
     },
     "autoload": {
         "psr-4": {
-            "App\\Kernal\\": "src/"
+            "App\\kernel\\": "src/",
+            "App\\": "app/"
         },
         "files": [
             "src/helpers.php"

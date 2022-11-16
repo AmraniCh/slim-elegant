@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Kernal;
+namespace App\kernel;
 
 use Psr\Container\ContainerInterface;
 use Slim\App as SlimApp;
@@ -8,7 +8,7 @@ use Slim\App as SlimApp;
 class App extends SlimApp
 {
     /** @var string */
-    protected $basePath;
+    private $basePath;
 
     /**
      * @param ContainerInterface|array|string $container
@@ -32,15 +32,17 @@ class App extends SlimApp
             throw new \RuntimeException("Container parameter type is invalid.");
         }
 
-        if ($container) {
-            // remove the Slim error handlers 
-            // unset($container['errorHandler']);
-            // unset($container['phpErrorHandler']);
-        }
-
         parent::__construct($container ?: []);
 
         $this->basePath = $basePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->basePath;
     }
 
     /**
@@ -68,10 +70,11 @@ class App extends SlimApp
         if (!file_exists($configsFile)) {
             throw new \RuntimeException("Routes file '$configsFile' does not exist.");
         }
+        $app = $this;
         $configs = require($configsFile);
         $settings = $this->getContainer()->get("settings");
         $settings->replace(array_merge($settings->all(), $configs));
-        return $this;
+        return $app;
     }
 
     /**

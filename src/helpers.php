@@ -44,6 +44,8 @@ if (!function_exists('config')) {
      */
     function config($key)
     {
+        global $app;
+        
         $path = dirname(__DIR__) . '/config/app.php';
 
         if (!file_exists($path)) {
