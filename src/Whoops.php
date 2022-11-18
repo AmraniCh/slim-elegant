@@ -1,6 +1,6 @@
 <?php
 
-namespace App\kernel;
+namespace App\Kernel;
 
 use Whoops\Run;
 use Slim\Http\Request;

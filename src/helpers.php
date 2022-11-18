@@ -1,7 +1,7 @@
 <?php
 
-if (!function_exists('env')) {
 
+if (!function_exists('_env')) {
     /**
      * Get environnement variables.
      *
@@ -9,7 +9,7 @@ if (!function_exists('env')) {
      * @throws \LogicException
      * @return mixed
      */
-    function env($key)
+    function _env($key)
     {
         if (!array_key_exists($key, $_ENV)) {
             throw new \LogicException("'$key' environnement variable not found.");
@@ -34,7 +34,6 @@ if (!function_exists('env')) {
 }
 
 if (!function_exists('config')) {
-
     /**
      * Get configaration variables.
      *
@@ -45,7 +44,7 @@ if (!function_exists('config')) {
     function config($key)
     {
         global $app;
-        
+
         $path = dirname(__DIR__) . '/config/app.php';
 
         if (!file_exists($path)) {

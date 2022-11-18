@@ -1,5 +1,5 @@
 {
-    "name": "chakir/slim-three-revive",
+    "name": "amranich/slim-three-revive",
     "type": "project",
     "license": "MIT",
     "authors": [{
@@ -9,16 +9,18 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.1",
-        "slim/slim": "3.*",
+        "slim/slim": "3.12.4",
         "vlucas/phpdotenv": "^5.5",
-        "symfony/var-dumper": "^5.4",
         "filp/whoops": "^2.14",
-        "illuminate/database": "^8.83",
+        "illuminate/database": "^5.8",
         "jenssegers/blade": "^1.4"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^4.4"
     },
     "autoload": {
         "psr-4": {
-            "App\\kernel\\": "src/",
+            "App\\Kernel\\": "src/",
             "App\\": "app/"
         },
         "files": [

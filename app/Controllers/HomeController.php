@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\kernel\Controller;
+use App\Kernel\Controller;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

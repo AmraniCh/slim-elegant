@@ -1,5 +1,6 @@
 <?php
 
+use App\Kernel\Whoops;
 use Jenssegers\Blade\Blade;
 
 return [
@@ -14,11 +15,11 @@ return [
      * ************************
      */
     'errorHandler' => function() {
-        return new \App\kernel\Whoops(config('app_debug'));
+        return new Whoops(config('app_debug'));
     },
 
     'phpErrorHandler' => function() {
-        return new \App\kernel\Whoops(config('app_debug'));
+        return new Whoops(config('app_debug'));
     },
 
     'notFoundHandler' => function() {

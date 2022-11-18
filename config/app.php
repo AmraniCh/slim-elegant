@@ -8,7 +8,7 @@ return [
      * It very helpul to have a global variable that defines the application name
      * and require it whenver you need it in your application. 
      */
-    'app_name' => env('APP_NAME'),
+    'app_name' => _env('APP_NAME'),
 
     /**
      * Debug mode.
@@ -18,19 +18,19 @@ return [
      * 
      * Note: This option must disabled in production.
      */
-    'app_debug' => env('APP_DEBUG'),
+    'app_debug' => _env('APP_DEBUG'),
 
     /**
      * Databse settings.
      */
     'database'   => [
-        'driver'    => env('DB_DRIVER'),
-        'host'      => env('DB_HOST'),
-        'username'  => env('DB_USERNAME'),
-        'password'  => env('DB_PASSWORD'),
-        'database'  => env('DB_DATABSE'),
-        'collation' => env('DB_collation'),
-        'prefix'    => env('DB_PREFIX'),
+        'driver'     => _env('DB_DRIVER'),
+        'host'       => _env('DB_HOST'),
+        'username'   => _env('DB_USERNAME'),
+        'password'   => _env('DB_PASSWORD'),
+        'database'   => _env('DB_DATABSE'),
+        'collection' => _env('DB_COLLECTION'),
+        'prefix'     => _env('DB_PREFIX'),
     ],
 
     /**
@@ -61,6 +61,6 @@ return [
       *
       * Default: false
       */
-    'displayErrorDetails' => env('APP_DEBUG') === true,
+    'displayErrorDetails' => _env('APP_DEBUG') === true,
 
 ];

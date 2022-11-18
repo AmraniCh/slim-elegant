@@ -1,6 +1,6 @@
 <?php
 
-namespace App\kernel;
+namespace App\Kernel;
 
 use Psr\Container\ContainerInterface;
 use Slim\App as SlimApp;
@@ -37,10 +37,7 @@ class App extends SlimApp
         $this->basePath = $basePath;
     }
 
-    /**
-     * @return string
-     */
-    public function getBasePath()
+    public function getBasePath(): string
     {
         return $this->basePath;
     }

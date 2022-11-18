@@ -1,6 +1,6 @@
 <?php
 
-namespace App\kernel\Http;
+namespace App\Kernel\Http;
 
 use Slim\Http\Stream;
 use Slim\Http\Headers;

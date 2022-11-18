@@ -1,9 +1,9 @@
 <?php
 
-namespace App\kernel;
+namespace App\Kernel;
 
 use Slim\Http\Response;
-use App\kernel\Http\HtmlResponse;
+use App\Kernel\Http\HtmlResponse;
 
 class Controller
 {

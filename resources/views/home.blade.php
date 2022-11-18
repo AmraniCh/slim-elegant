@@ -1,5 +1,5 @@
 @extends('app')
 
 @section('content')
-    <h1>Hello world!</h1>
+    <h1>{{ config('app_name') }}</h1>
 @endsection
