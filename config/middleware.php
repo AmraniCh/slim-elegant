@@ -13,11 +13,19 @@ return [
      * Note: The last defined middleware will be executed first. 
      */
 
-    function ($request, $response, $next) {
-        $response->getBody()->write('BEFORE-');
-        $response = $next($request, $response);
-        $response->getBody()->write('-AFTER');
-        return $response;
-    },
+     /**
+      * Middleware example.
+      */
+    // function ($request, $response, $next) {
+    //     $response->getBody()->write('BEFORE-');
+    //     $response = $next($request, $response);
+    //     $response->getBody()->write('-AFTER');
+    //     return $response;
+    // },
+    
 
+    function($request, $response, $next) {
+        session_start();
+        return $next($request, $response);
+    },
 ];

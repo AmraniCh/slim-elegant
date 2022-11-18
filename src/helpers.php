@@ -60,3 +60,16 @@ if (!function_exists('config')) {
         return $config[$key];
     }
 }
+
+if (!function_exists('route')) {
+
+    function route($routeName, $data = [])
+    {
+        global $app;
+        
+        return $app
+            ->getContainer()
+            ->get('router')
+            ->pathFor($routeName, $data);
+    }
+}
