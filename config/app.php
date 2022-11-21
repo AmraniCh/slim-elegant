@@ -57,7 +57,7 @@ return [
      */
 
      /**
-      * Tells the slim Whether to show exception details or not.
+      * Tells the slim whether to show exception details or not.
       *
       * Default: false
       */

@@ -22,12 +22,12 @@ class App extends SlimApp
         }
 
         if (is_null($container)) {
-            $container = require($basePath . '/config/container.php');
+            $container = $this->requireWithVariables($basePath . '/config/container.php');
         } elseif (is_string($container)) {
             if (!file_exists($container)) {
                 throw new \RuntimeException("Container settings file '$container' does not exist.");
             }
-            $container = require($container);
+            $container = $this->requireWithVariables($container);
         } elseif (!$container instanceof ContainerInterface) {
             throw new \RuntimeException("Container parameter type is invalid.");
         }
@@ -51,27 +51,31 @@ class App extends SlimApp
     public function loadEnvironnement($envFileDirectory = '')
     {
         (\Dotenv\Dotenv::createMutable($envFileDirectory ?: $this->basePath))->load();
+        
         return $this;
     }
 
     /**
-     * Read the configuration files [config/app.php] and merge the app configs with the default 
+     * Read the configuration files [config/app.php] and merge the app configs with the default
      * Slim container settings.
-     * 
-     * @param string $configsFile
+     *
+     * @param string $configFile
      * @return self
      */
-    public function loadConfiguration($configsFile = '')
+    public function loadConfiguration($configFile = '')
     {
-        $configsFile = $configsFile ?: $this->basePath . '/config/app.php';
-        if (!file_exists($configsFile)) {
-            throw new \RuntimeException("Routes file '$configsFile' does not exist.");
+        $configFile = $configFile ?: $this->basePath . '/config/app.php';
+        
+        if (!file_exists($configFile)) {
+            throw new \RuntimeException("Routes file '$configFile' does not exist.");
         }
-        $app = $this;
-        $configs = require($configsFile);
+
+        $configs = $this->requireWithVariables($configFile);
+
         $settings = $this->getContainer()->get("settings");
         $settings->replace(array_merge($settings->all(), $configs));
-        return $app;
+
+        return $this;
     }
 
     /**
@@ -82,12 +86,14 @@ class App extends SlimApp
     public function loadRoutes($routesFile = '')
     {
         $routesFile = $routesFile ?: $this->basePath . '/routes.php';
+
         if (!file_exists($routesFile)) {
             throw new \RuntimeException("Routes file '$routesFile' does not exist.");
         }
-        $app = $this;
-        require($routesFile);
-        return $app;
+
+        $this->requireWithVariables($routesFile);
+
+        return $this;
     }
 
     /**
@@ -98,24 +104,52 @@ class App extends SlimApp
     public function loadMiddlewares($middlewaresFile = '')
     {
         $middlewaresFile = $middlewaresFile ?: $this->basePath . '/config/middleware.php';
+
         if (!file_exists($middlewaresFile)) {
             throw new \RuntimeException("Middleware file '$middlewaresFile' does not exist.");
         }
-        $app = $this;
-        $middlewares = require($middlewaresFile);
+
+        $middlewares = $this->requireWithVariables($middlewaresFile);
+
         foreach ($middlewares as $middleware) {
-            $app->add($middleware);
+            $this->add($middleware);
         }
-        return $app;
+
+        return $this;
     }
 
     public function loadEloquent()
     {
-        $capsule = new \Illuminate\Database\Capsule\Manager;
+        $capsule = new \Illuminate\Database\Capsule\Manager();
         $capsule->addConnection($this->getContainer()->get('settings')['database']);
+
         $resolver = new \Illuminate\Database\ConnectionResolver(['default' => $capsule->getConnection()]);
         $resolver->setDefaultConnection('default');
+
         \Illuminate\Database\Eloquent\Model::setConnectionResolver($resolver);
+
         return $this;
+    }
+
+    /**
+     * @return mixed
+     * @throws \LogicException
+     */
+    private function requireWithVariables($file)
+    {
+        if (!file_exists($file)) {
+            throw new \LogicException("Application file '$file' do not exist.");
+        }
+
+        $vars = [
+            'app'       => $this,
+            'container' => $this->getContainer(),
+        ];
+
+        foreach ($vars as $name => $value) {
+            ${$name} = $value;
+        }
+
+        return require $file;
     }
 }
