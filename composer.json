@@ -14,7 +14,8 @@
         "filp/whoops": "^2.14",
         "illuminate/database": "^5.8",
         "jenssegers/blade": "^1.4",
-        "slim/csrf": "^0.8"
+        "slim/csrf": "^0.8",
+        "bryanjhv/slim-session": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.4"

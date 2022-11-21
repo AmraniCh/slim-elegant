@@ -5,15 +5,15 @@ return [
     /**
      * Application name.
      * 
-     * It very helpul to have a global variable that defines the application name
-     * and require it whenver you need it in your application. 
+     * It very helpful to have a global variable that defines the application name
+     * and require it whenever you need it in your application. 
      */
     'app_name' => _env('APP_NAME'),
 
     /**
      * Debug mode.
      * 
-     * When disabled the application deson't show any details about exception
+     * When disabled the application doesn't show any details about exception
      * and just shows a friendly message to the user.
      * 
      * Note: This option must disabled in production.
@@ -21,14 +21,14 @@ return [
     'app_debug' => _env('APP_DEBUG'),
 
     /**
-     * Databse settings.
+     * Database settings.
      */
     'database'   => [
         'driver'     => _env('DB_DRIVER'),
         'host'       => _env('DB_HOST'),
         'username'   => _env('DB_USERNAME'),
         'password'   => _env('DB_PASSWORD'),
-        'database'   => _env('DB_DATABSE'),
+        'database'   => _env('DB_DATABASE'),
         'collection' => _env('DB_COLLECTION'),
         'prefix'     => _env('DB_PREFIX'),
     ],
