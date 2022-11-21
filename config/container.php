@@ -6,7 +6,7 @@ use Jenssegers\Blade\Blade;
 
 return [
 
-    'generateQuoteService' => function() {
+    'generateQuoteService' => function () {
         return "This world shall know pain!";
     },
 
@@ -15,15 +15,15 @@ return [
      * Slim container services.
      * ************************
      */
-    'errorHandler' => function() {
+    'errorHandler' => function () {
         return new Whoops(config('app_debug'));
     },
 
-    'phpErrorHandler' => function() {
+    'phpErrorHandler' => function () {
         return new Whoops(config('app_debug'));
     },
 
-    'notFoundHandler' => function() {
+    'notFoundHandler' => function () {
         return function ($request, Slim\Http\Response $response) {
             return $response->withStatus(404)
                 ->withHeader('Content-Type', 'text/html')
@@ -50,8 +50,10 @@ return [
      * @link https://github.com/slimphp/Slim-Csrf/tree/0.8.3
      */
     'csrf' => function (): Guard {
-        $guard = new Guard();
-
+        $guard = new Guard;
+        // TODO make the persistent mode configurable through the 'config/app.php' file
+        // and solve the blade cache problem for templates that use the '@crsf' directive
+        $guard->setPersistentTokenMode(true);
         $guard->setFailureCallable(function ($request, $response, $next) {
             $request = $request->withAttribute("csrf_status", false);
             return $next($request, $response);
@@ -61,5 +63,3 @@ return [
     },
 
 ];
-
-
