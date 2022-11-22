@@ -4,12 +4,11 @@
 if (!function_exists('_env')) {
     /**
      * Get environnement variables.
-     *
-     * @param string $key
+     * 
      * @throws \LogicException
      * @return mixed
      */
-    function _env($key)
+    function _env(string $key)
     {
         if (!array_key_exists($key, $_ENV)) {
             throw new \LogicException("'$key' environnement variable not found.");
@@ -35,35 +34,28 @@ if (!function_exists('_env')) {
 
 if (!function_exists('config')) {
     /**
-     * Get configaration variables.
+     * Get configuration variables.
      *
-     * @param string $key
-     * @throws \LogicException|\RuntimeException
+     * @throws \LogicException
      * @return mixed
      */
-    function config($key)
+    function config(string $key)
     {
         global $app;
 
-        $path = dirname(__DIR__) . '/config/app.php';
+        $configs = $app->getAppConfiguration();
 
-        if (!file_exists($path)) {
-            throw new \RuntimeException("'config/app.php' configuration file not exists.");
-        }
-
-        $config = include($path);
-
-        if (!array_key_exists($key, $config)) {
+        if (!array_key_exists($key, $configs)) {
             throw new \LogicException("'$key' not found in configuration variables file.");
         }
 
-        return $config[$key];
+        return $configs[$key];
     }
 }
 
 if (!function_exists('route')) {
 
-    function route($routeName, $data = [])
+    function route(string $routeName, array $data = []): string
     {
         global $app;
         

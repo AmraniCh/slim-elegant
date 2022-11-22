@@ -1,12 +1,13 @@
 <?php
 
+use Slim\Container;
 use Slim\Csrf\Guard;
 use App\Kernel\Whoops;
 use Jenssegers\Blade\Blade;
 
 return [
 
-    'generateQuoteService' => function () {
+    'generateQuoteService' => function (): string {
         return "This world shall know pain!";
     },
 
@@ -15,15 +16,15 @@ return [
      * Slim container services.
      * ************************
      */
-    'errorHandler' => function () {
+    'errorHandler' => function (): Whoops {
         return new Whoops(config('app_debug'));
     },
 
-    'phpErrorHandler' => function () {
+    'phpErrorHandler' => function (): Whoops {
         return new Whoops(config('app_debug'));
     },
 
-    'notFoundHandler' => function () {
+    'notFoundHandler' => function (): \Closure {
         return function ($request, Slim\Http\Response $response) {
             return $response->withStatus(404)
                 ->withHeader('Content-Type', 'text/html')
@@ -31,7 +32,7 @@ return [
         };
     },
 
-    'view' => function ($container): Blade {
+    'view' => function (Container $container): Blade {
         $blade = new Blade(config('views_path'), config('blade_cache_path'));
 
         $blade->directive('csrf', function () use ($container) {

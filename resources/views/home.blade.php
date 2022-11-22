@@ -11,7 +11,7 @@
         </label>
         <label>
             Password :
-            <input type="text" name="password" placeholder="Your password">
+            <input type="password" name="password" placeholder="Your password">
         </label>
         <input type="submit" value="Sign in">
     </form>

@@ -10,12 +10,14 @@ class App extends SlimApp
     /** @var string */
     private $basePath;
 
+    /** @var array */
+    private $appConfiguration;
+
     /**
      * @param ContainerInterface|array|string $container
-     * @param string $basePath
      * @throws \RuntimeException
      */
-    public function __construct($basePath, $container = null)
+    public function __construct(string $basePath, $container = null)
     {
         if (!$basePath | !is_dir($basePath)) {
             throw new \RuntimeException("The base application path given '$basePath' does not exist.");
@@ -43,12 +45,19 @@ class App extends SlimApp
     }
 
     /**
+     * Gets application level configuration.
+     */
+    public function getAppConfiguration(): array
+    {
+        return $this->appConfiguration;
+    }
+
+    /**
      * Load environnement variables from the .env file.
      *
      * @param string $envFileDirectory the path of the directory where .env file is located.
-     * @return self
      */
-    public function loadEnvironnement($envFileDirectory = '')
+    public function loadEnvironnement(string $envFileDirectory = ''): self
     {
         (\Dotenv\Dotenv::createMutable($envFileDirectory ?: $this->basePath))->load();
         
@@ -56,13 +65,10 @@ class App extends SlimApp
     }
 
     /**
-     * Read the configuration files [config/app.php] and merge the app configs with the default
-     * Slim container settings.
-     *
-     * @param string $configFile
-     * @return self
+     * Read the application configuration file [config/app.php] and merge the app configs with 
+     * the default Slim container settings.
      */
-    public function loadConfiguration($configFile = '')
+    public function loadConfiguration(string $configFile = ''): self
     {
         $configFile = $configFile ?: $this->basePath . '/config/app.php';
         
@@ -70,20 +76,19 @@ class App extends SlimApp
             throw new \RuntimeException("Routes file '$configFile' does not exist.");
         }
 
-        $configs = $this->requireWithVariables($configFile);
+        $this->appConfiguration = $this->requireWithVariables($configFile);
 
         $settings = $this->getContainer()->get("settings");
-        $settings->replace(array_merge($settings->all(), $configs));
+        $settings->replace(array_merge($settings->all(), $this->appConfiguration));
 
         return $this;
     }
 
     /**
      * @param string $routesFile
-     * @throw \RuntimeException
-     * @return self
+     * @throws \RuntimeException
      */
-    public function loadRoutes($routesFile = '')
+    public function loadRoutes(string $routesFile = ''): self
     {
         $routesFile = $routesFile ?: $this->basePath . '/routes.php';
 
@@ -99,9 +104,8 @@ class App extends SlimApp
     /**
      * @param string $middlewaresFile
      * @throw \RuntimeException
-     * @return self
      */
-    public function loadMiddlewares($middlewaresFile = '')
+    public function loadMiddlewares(string $middlewaresFile = ''): self
     {
         $middlewaresFile = $middlewaresFile ?: $this->basePath . '/config/middleware.php';
 
@@ -118,7 +122,7 @@ class App extends SlimApp
         return $this;
     }
 
-    public function loadEloquent()
+    public function loadEloquent(): self
     {
         $capsule = new \Illuminate\Database\Capsule\Manager();
         $capsule->addConnection($this->getContainer()->get('settings')['database']);
@@ -135,10 +139,10 @@ class App extends SlimApp
      * @return mixed
      * @throws \LogicException
      */
-    private function requireWithVariables($file)
+    protected function requireWithVariables(string $filePath)
     {
-        if (!file_exists($file)) {
-            throw new \LogicException("Application file '$file' do not exist.");
+        if (!file_exists($filePath)) {
+            throw new \LogicException("Application file '$filePath' do not exist.");
         }
 
         $vars = [
@@ -150,6 +154,6 @@ class App extends SlimApp
             ${$name} = $value;
         }
 
-        return require $file;
+        return require $filePath;
     }
 }

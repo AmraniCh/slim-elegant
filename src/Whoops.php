@@ -24,7 +24,7 @@ class Whoops extends AbstractHandler
 		$this->showDetails = $showDetails;
 	}
 
-	public function __invoke(Request $request, Response $response, $exception): Response
+	public function __invoke(Request $request, Response $response, \Throwable $exception): Response
 	{
 		$whoops = new Run();
 		$whoops->allowQuit(false);
@@ -58,12 +58,10 @@ class Whoops extends AbstractHandler
 	}
 
 	/**
-	 * Gets the appropriate Whoops handler for the incoming request's content type as specified by the header "accept" 
-	 *
-	 * @param Request $request
-	 * @return string
+	 * Gets the appropriate Whoops handler for the incoming request's content type
+	 * recording to request header "accept" value.
 	 */
-	protected function getHandlerByContentType($contentType): string
+	protected function getHandlerByContentType(string $contentType): string
 	{
 		switch ($contentType) {
 			case 'application/json':

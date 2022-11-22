@@ -2,29 +2,34 @@
 
 namespace App\Kernel;
 
+use Slim\Container;
 use Slim\Http\Response;
 use App\Kernel\Http\HtmlResponse;
 
-class Controller
+abstract class Controller
 {
+    /** @var Container  */
     protected $container;
 
-    public function __construct(\Slim\Container $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    public function __get($name)
+    /**
+     * @return mixed
+     */
+    public function __get(string $key)
     {
-        if (!$this->container->has($name)) {
-            throw new \RuntimeException("The service '$name' is not registered in the container.");
+        if (!$this->container->has($key)) {
+            throw new \RuntimeException("Service '$key' is not registered in the container.");
         }
 
-        return $this->container->$name;
+        return $this->container->$key;
     }
 
     public function render(Response $response, string $template, array $data = []): Response
-    {  
+    {
         return HtmlResponse::from($response, $this->view->make($template, $data));
     }
 }
