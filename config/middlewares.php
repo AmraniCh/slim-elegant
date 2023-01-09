@@ -13,10 +13,6 @@ return [
      * Note: The last defined middleware will be executed first.
      */
 
-    /**
-     * Session Middleware.
-     * @link https://github.com/bryanjhv/slim-session
-     */
-    new Slim\Middleware\Session(require $app->getBasePath() . '/config/session.php'),
+    new Slim\Middleware\Session(config('session')),
 
 ];

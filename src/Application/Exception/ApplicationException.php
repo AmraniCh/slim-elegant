@@ -2,7 +2,7 @@
 
 namespace App\Kernel\Application\Exception;
 
-class ApplicationFileException extends \LogicException
+class ApplicationException extends \Exception
 {
 
 }

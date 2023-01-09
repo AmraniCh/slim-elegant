@@ -46,7 +46,7 @@ if (!function_exists('config')) {
     {
         global $app;
 
-        $configs = require $app->getAppConfigFile();
+        $configs = require $app->getBasePath() . '/config/app.php';
 
         if (!array_key_exists($key, $configs)) {
             throw new \LogicException("'$key' configuration variable not exist.");

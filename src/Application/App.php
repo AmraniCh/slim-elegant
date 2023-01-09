@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\ConnectionResolver;
-use App\Kernel\Application\Exception\ApplicationFileException;
+use App\Kernel\Application\Exception\ApplicationException;
 
 class App extends SlimApp
 {
@@ -19,37 +19,24 @@ class App extends SlimApp
     private $envDirectory;
 
     /** @var string */
-    private $appConfigFile;
-
-    /** @var string */
     private $routesFile;
 
-    /** @var string */
-    private $middlewaresFile;
-
     /**
-     * @param ContainerInterface|array|string $container
+     * @param ContainerInterface|array $container
      * 
-     * @throws ApplicationFileException|\InvalidArgumentException
+     * @throws ApplicationException|\InvalidArgumentException
      */
-    public function __construct(string $basePath, $container = null)
+    public function __construct(string $basePath, $container = [])
     {
         if (!$basePath | !is_dir($basePath)) {
-            throw new ApplicationFileException("The base application path given '$basePath' does not exist.");
+            throw new ApplicationException("The given base application path '$basePath' do not exist.");
         }
 
-        if (is_null($container)) {
-            $container = $this->requireWithVariables($basePath . '/config/container.php');
-        } elseif (is_string($container)) {
-            if (!file_exists($container)) {
-                throw new ApplicationFileException("Container settings file '$container' does not exist.");
-            }
-            $container = $this->requireWithVariables($container);
-        } elseif (!$container instanceof ContainerInterface) {
-            throw new \InvalidArgumentException("Container parameter type is invalid.");
+        if (!$container instanceof ContainerInterface && empty($container)) {
+            $container = $this->requireWithVariables("$basePath/config/container.php");
         }
 
-        parent::__construct($container ?: []);
+        parent::__construct($container);
 
         $this->basePath = $basePath;
     }
@@ -64,19 +51,9 @@ class App extends SlimApp
         return $this->envDirectory;
     }
 
-    public function getAppConfigFile(): string
-    {
-        return $this->appConfigFile;
-    }
-
     public function getRoutesFile(): string
     {
         return $this->routesFile;
-    }
-
-    public function getMiddlewaresFile(): string
-    {
-        return $this->middlewaresFile;
     }
 
     /**
@@ -94,65 +71,32 @@ class App extends SlimApp
     }
 
     /**
-     * Read the application configuration file [config/app.php] and merge the app configs with 
-     * the default Slim container settings.
-     * 
-     * @throws ApplicationFileException
+     * Reads the application configuration file 'config/app.php' and merge 
+     * the configuration variables with the default Slim container settings.
      */
     public function loadConfiguration(): self
     {
         $configFile = $this->basePath . '/config/app.php';
-        
-        if (!file_exists($configFile)) {
-            throw new ApplicationFileException("Application configuration file '$configFile' does not exist.");
-        }
-
-        $this->appConfigFile = $configFile;
-
-        $appConfigs = $this->requireWithVariables($configFile);
+        $configVariables = $this->requireWithVariables($configFile);
         $settings = $this->getContainer()->get("settings");
-        $settings->replace(array_merge($settings->all(), $appConfigs));
+        $settings->replace(array_merge($settings->all(), $configVariables));
 
         return $this;
     }
 
-    /**
-     * @param string $routesFile
-     * 
-     * @throws ApplicationFileException
-     */
     public function loadRoutes(string $routesFile = ''): self
     {
         $routesFile = $routesFile ?: $this->basePath . '/routes.php';
-
-        if (!file_exists($routesFile)) {
-            throw new ApplicationFileException("Routes file '$routesFile' does not exist.");
-        }
-
         $this->routesFile = $routesFile;
-
         $this->requireWithVariables($routesFile);
 
         return $this;
     }
 
-    /**
-     * @param string $middlewaresFile
-     * 
-     * @throws ApplicationFileException
-     */
     public function loadMiddlewares(): self
     {
-        $middlewaresFile = $this->basePath . '/config/middleware.php';
-
-        if (!file_exists($middlewaresFile)) {
-            throw new ApplicationFileException("Middlewares file '$middlewaresFile' does not exist.");
-        }
-
-        $this->middlewaresFile = $middlewaresFile;
-
+        $middlewaresFile = $this->basePath . '/config/middlewares.php';
         $middlewares = $this->requireWithVariables($middlewaresFile);
-
         foreach ($middlewares as $middleware) {
             $this->add($middleware);
         }
@@ -176,16 +120,16 @@ class App extends SlimApp
     /**
      * @return mixed
      * 
-     * @throws ApplicationFileException
+     * @throws ApplicationException
      */
     private function requireWithVariables(string $filePath)
     {
         if (!file_exists($filePath)) {
-            throw new ApplicationFileException("Application file '$filePath' do not exist.");
+            throw new ApplicationException("Application file '$filePath' do not exist.");
         }
 
         $vars = [
-            'app'       => $this,
+            'app' => $this,
             'container' => $this->getContainer(),
         ];
 

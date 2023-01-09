@@ -5,7 +5,6 @@ namespace App\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use App\Kernel\Controller\Controller;
-use Exception;
 
 class HomeController extends Controller
 {

@@ -30,6 +30,9 @@ return [
         };
     },
 
+    /**
+     * @link https://github.com/jenssegers/blade
+     */
     'view' => function (Container $container): Blade {
         $blade = new Blade(config('views_path'), config('blade_cache_path'));
 
@@ -64,6 +67,9 @@ return [
         return $guard;
     },
 
+    /**
+     * @link https://github.com/bryanjhv/slim-session
+     */
     'session' => function (): Helper {
         return new Helper;
     },
