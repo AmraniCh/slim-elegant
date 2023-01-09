@@ -49,6 +49,11 @@ return [
     'blade_cache_path' => $app->getBasePath() . '/cache/blade',
 
     /**
+     * Shortcut for session config file.
+     */
+    'session' => require $app->getBasePath() . '/config/session.php',
+
+    /**
      * //////////////////////////////
      * Slim application configuration
      * //////////////////////////////

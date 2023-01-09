@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Kernel;
+namespace App\Kernel\Handler;
 
 use Whoops\Run;
 use Slim\Http\Request;
@@ -14,25 +14,33 @@ use Whoops\Handler\JsonResponseHandler;
 class Whoops extends AbstractHandler
 {
 	/** @var bool */
-	protected $showDetails;
+	private $showDetails;
 
-	/**
-	 * @param bool $showDetails
-	 */
-	public function __construct($showDetails)
+	public function __construct(bool $showDetails)
 	{
 		$this->showDetails = $showDetails;
+	}
+
+	public function isShowDetails(): bool
+	{
+		return $this->showDetails;
 	}
 
 	public function __invoke(Request $request, Response $response, \Throwable $exception): Response
 	{
 		$whoops = new Run();
+
 		$whoops->allowQuit(false);
 		$whoops->writeToOutput(false);
+
 		$contentType = $this->determineContentType($request);
-		$handler = $this->getHandlerByContentType($contentType);
+
+		$handler = $this->resolveHandler($contentType);
+
 		$whoops->pushHandler(new $handler);
+		
 		$content = $whoops->handleException($exception);
+
 		if (!$this->showDetails) {
 			$data = [
 				'message' => 'Sorry, Something went wrong!',
@@ -58,10 +66,9 @@ class Whoops extends AbstractHandler
 	}
 
 	/**
-	 * Gets the appropriate Whoops handler for the incoming request's content type
-	 * recording to request header "accept" value.
+	 * Gets the appropriate Whoops handler by request type.
 	 */
-	protected function getHandlerByContentType(string $contentType): string
+	protected function resolveHandler(string $contentType): string
 	{
 		switch ($contentType) {
 			case 'application/json':

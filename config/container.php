@@ -2,20 +2,17 @@
 
 use Slim\Container;
 use Slim\Csrf\Guard;
-use App\Kernel\Whoops;
 use Jenssegers\Blade\Blade;
+use App\Kernel\Handler\Whoops;
 
 return [
 
-    'generateQuoteService' => function (): string {
-        return "This world shall know pain!";
-    },
-
     /**
-     * ************************
-     * Slim container services.
-     * ************************
+     * Define your container dependencies here.
      */
+
+     //
+     
     'errorHandler' => function (): Whoops {
         return new Whoops(config('app_debug'));
     },
@@ -52,10 +49,12 @@ return [
      */
     'csrf' => function (): Guard {
         $guard = new Guard;
+
         // TODO make the persistent mode configurable through the 'config/app.php' file
         // and solve the blade cache problem for templates that use the '@crsf' directive
         // (for non persistence crsf tokens)
         $guard->setPersistentTokenMode(true);
+        
         $guard->setFailureCallable(function ($request, $response, $next) {
             $request = $request->withAttribute("csrf_status", false);
             return $next($request, $response);

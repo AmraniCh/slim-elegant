@@ -10,25 +10,31 @@ use Psr\Http\Message\ResponseInterface;
 class BaseResponse extends Response
 {
 
-    public function __construct(string $body = null, int $status = 200, array $headers = [])
+    public function __construct($body = null, int $status = 200, array $headers = [])
     {
         $headers = new Headers($headers);
 
-        $newStream = new Stream(fopen('php://temp', 'r+'));
-        $newStream->write($body);
-        $newStream->rewind();
+        if ($body) {
+            $stream = new Stream(fopen('php://temp', 'r+'));
+            $stream->write($body);
+            $stream->rewind();
+        }
 
-        parent::__construct($status, $headers, $newStream);
+        parent::__construct($status, $headers, $stream ?? $body);
     }
 
-    public static function from(ResponseInterface $response, $body, $status = 200, $headers = [])
+    public static function from(ResponseInterface $response, $body, int $status = 200, array $headers = []): ResponseInterface
     {
-        $static = new static($body, $status, $headers);
-        $response->getBody()->write($static->getBody());
-        $response = $response->withStatus($static->getStatusCode());
-        foreach ($static->getHeaders() as $name => $values) {
+        $baseResponse = new static($body, $status, $headers);
+
+        $response->getBody()->write($baseResponse->getBody());
+
+        $response = $response->withStatus($baseResponse->getStatusCode());
+
+        foreach ($baseResponse->getHeaders() as $name => $values) {
             $response = $response->withHeader($name, implode(', ', $values));
         }
+
         return $response;
     }
 }
