@@ -1,17 +1,17 @@
 # slim-elegant
 
-💠 Flexible and simple Slim skeleton comes with support of Blade templating, Eloquent models, and much more other features.
+💠 An elegant, simple Slim bootstrap project that comes with support of Blade templating, Eloquent models, and much more other features.
 
 ## Features
 
 * Flexible and simple (Built with KIS concept in mind).
-* Blade Integration.
-* Eloquent Models Supported.
+* Blade Template Engine.
+* Eloquent Models.
 * Whoops error handler.
 * CRSF Protection.
 * Supporting Environnement variables.
 * Configurable PHP sessions.
-* Provide HTTP requests & responses objects ready to be used inside your controllers.
+* Provide HTTP requests and responses objects ready to use inside your controllers.
 
 ## TODO
 
