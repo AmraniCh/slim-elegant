@@ -1,25 +1,21 @@
 <?php
 
-use App\Controllers\HomeController;
-use App\Kernel\Http\RedirectResponse;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use App\Controllers\HomeController;
+use App\Kernel\Middleware\VerifyCrsf;
 
-$verifyCsrfMiddleware = function ($request, $response, $next) use ($app) {
-    if ($request->getAttribute('csrf_status') === false) {
-        return new App\Kernel\Http\PlainResponse('CSRF check fails', 400);
-    }
+$app->group('', function () use ($app) {
 
-    return $next($request, $response);
-};
+    $app
+        ->get('/', HomeController::class . ':index')
+        ->add($app->getContainer()->get('csrf'));
 
-$app->group('', function () use ($app, $verifyCsrfMiddleware) {
-    $app->get('/', HomeController::class . ':index');
-
-    $app->post('/login', function (Request $request, Response $response) use ($app) {
-        return $response->getBody()->write("Request is safe!");
-    })
+    $app
+        ->post('/login', function (Request $request, Response $response) use ($app) {
+            return $response->getBody()->write("request from safe origin!");
+         })
         ->setName('login')
-        ->add($verifyCsrfMiddleware);
+        ->add(new VerifyCrsf);
         
-})->add($app->getContainer()->get('csrf'));
+});
