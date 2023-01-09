@@ -54,6 +54,7 @@ return [
         $guard = new Guard;
         // TODO make the persistent mode configurable through the 'config/app.php' file
         // and solve the blade cache problem for templates that use the '@crsf' directive
+        // (for non persistence crsf tokens)
         $guard->setPersistentTokenMode(true);
         $guard->setFailureCallable(function ($request, $response, $next) {
             $request = $request->withAttribute("csrf_status", false);
