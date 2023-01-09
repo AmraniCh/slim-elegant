@@ -2,6 +2,7 @@
 
 use Slim\Container;
 use Slim\Csrf\Guard;
+use SlimSession\Helper;
 use Jenssegers\Blade\Blade;
 use App\Kernel\Handler\Whoops;
 
@@ -63,4 +64,7 @@ return [
         return $guard;
     },
 
+    'session' => function (): Helper {
+        return new Helper;
+    },
 ];

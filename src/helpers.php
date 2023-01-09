@@ -1,5 +1,22 @@
 <?php
 
+if (!function_exists('app')) {
+    /**
+     * Allows accessing the app instance as a function.
+     */
+    function app(): \App\Kernel\Application\App
+    {
+        global $app;
+        return $app;
+    }
+}
+
+if (!function_exists('container')) {
+    function container(): Slim\Container
+    {
+        return app()->getContainer();
+    }
+}
 
 if (!function_exists('_env')) {
     /**
@@ -54,7 +71,6 @@ if (!function_exists('config')) {
 }
 
 if (!function_exists('route')) {
-
     function route(string $routeName, array $data = []): string
     {
         global $app;
@@ -63,5 +79,12 @@ if (!function_exists('route')) {
             ->getContainer()
             ->get('router')
             ->pathFor($routeName, $data);
+    }
+}
+
+if (!function_exists('session')) {
+    function session(): SlimSession\Helper
+    {
+        return container()->get('session');
     }
 }
