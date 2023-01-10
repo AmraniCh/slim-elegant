@@ -36,7 +36,7 @@ if (!function_exists('_env')) {
 
 if (!function_exists('config')) {
     /**
-     * Get configuration variables.
+     * Get configuration values.
      * 
      * @return mixed
      * 
@@ -46,13 +46,21 @@ if (!function_exists('config')) {
     {
         global $app;
 
-        $configs = require $app->getBasePath() . '/config/app.php';
+        $configVariables = require $app->getBasePath() . '/config/app.php';
 
-        if (!array_key_exists($key, $configs)) {
-            throw new \LogicException("'$key' configuration variable not exist.");
+        // support accessing other configuration files:
+        // if the requested config var is not exist in the main configuration file (app.php)
+        // then search in the config directory for a config file with the same name as 
+        // the config name
+        if (!array_key_exists($key, $configVariables)) {
+            $configFile = sprintf("%s/config/%s.php", $app->getBasePath(), $key);
+            if (!file_exists($configFile)) {
+                throw new \LogicException("'$key' configuration variable not exist.");
+            }
+            $value = require $configFile;
+        } else {
+            $value = $configs[$key];
         }
-
-        $value = $configs[$key];
 
         if ($value instanceof \Closure) {
             return call_user_func($value);

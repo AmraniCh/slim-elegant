@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\ConnectionResolver;
-use App\Kernel\Application\Exception\ApplicationException;
+use App\Kernel\Application\ApplicationException;
 
 class App extends SlimApp
 {
@@ -24,12 +24,12 @@ class App extends SlimApp
     /**
      * @param ContainerInterface|array $container
      * 
-     * @throws ApplicationException|\InvalidArgumentException
+     * @throws ApplicationException
      */
     public function __construct(string $basePath, $container = [])
     {
-        if (!$basePath | !is_dir($basePath)) {
-            throw new ApplicationException("The given base application path '$basePath' do not exist.");
+        if (!$basePath || !is_dir($basePath)) {
+            throw new ApplicationException("Given application base path '$basePath' is invalid or do not exist.");
         }
 
         if (!$container instanceof ContainerInterface && empty($container)) {
