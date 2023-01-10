@@ -36,37 +36,43 @@ class Whoops extends AbstractHandler
 		$contentType = $this->determineContentType($request);
 
 		$handler = $this->resolveHandler($contentType);
-
 		$whoops->pushHandler(new $handler);
 		
-		$content = $whoops->handleException($exception);
-
-		if (!$this->showDetails) {
-			$data = [
+		if ($this->showDetails) {
+			$content = $whoops->handleException($exception);
+		} else {
+			$content = $this->parseResponseBody($contentType, [
 				'message' => 'Sorry, Something went wrong!',
 				'status'  => 'error'
-			];
-
-			// TODO handle XML requests
-			switch ($contentType) {
-				case 'application/json':
-					$content = json_encode($data);
-					break;
-
-				case 'text/plain':
-				case 'text/html':
-					$content = $data['message'];
-					break;
-			}
+			]);
 		}
 
 		return $response->withStatus(500)
 			->withHeader('Content-type', $contentType)
 			->write($content);
 	}
+	
+	/**
+	 * Parses a response body according the given content type.
+	 */
+	protected function parseResponseBody(string $contentType, $body): string
+	{
+		// TODO handle XML content type
+
+		switch ($contentType) {
+			case 'application/json':
+				return json_encode($body);
+
+			case 'text/plain':
+			case 'text/html':
+				return $body['message'];
+		}
+	}
 
 	/**
-	 * Gets the appropriate Whoops handler by request type.
+	 * Gets the appropriate Whoops handler according to the content type 
+	 * given by the request header 'accept' which indicates what the 
+	 * content type is expecting in the returned response.
 	 */
 	protected function resolveHandler(string $contentType): string
 	{
