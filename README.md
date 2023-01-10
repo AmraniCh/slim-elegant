@@ -1,23 +1,41 @@
 # slim-elegant
 
-💠 An elegant, simple Slim bootstrap project that comes with support of Blade templating, Eloquent models, and much more other features.
+💠 Simple Slim skeleton that supports Blade templating, Eloquent Models, and other features.
 
 ## Features
 
-* Flexible and simple (Built with KIS concept in mind).
-* Blade Template Engine.
+* Flexible and Simple (Built with KIS Concept in Mind).
+* Blade Templating.
 * Eloquent Models.
-* Whoops error handler.
+* Whoops Error Handler.
 * CRSF Protection.
-* Supporting Environnement variables.
-* Configurable PHP sessions.
-* Provide HTTP requests and responses objects ready to use inside your controllers.
+* Supporting environment variables.
+* Configurable PHP Sessions.
+* Ships with ready-to-use HTTP response objects.
+
+## Installation
+
+Create the project using this composer command:
+
+```bash
+composer create-project amranich/slim-elegant app-name --stability dev
+```
+
+Configure git (if you use a VCS):
+
+```
+git remote add origin URL
+git add .
+git commit -m "First commit"
+git push -u origin master
+```
 
 ## TODO
 
 * Support Flash Messages.
 * Support backend validation of requests parameters (may be integrate the `illuminate\Validation` component).
-* Separate routes into multiple files upon route type (web, api or cli).
-* Adding more helper function (`redirectToRoute()`, `session()` ...).
+* Adding more helper functions (`redirect`, `redirectToRoute`, `assets` ...).
 * Support per request crsf tokens (Non persistence mode).
 * Adding user authentication layer.
+* Support console requests.
+* Provide a simple CLI interface and .
