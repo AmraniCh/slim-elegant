@@ -46,20 +46,20 @@ if (!function_exists('config')) {
     {
         global $app;
 
-        $configVariables = require $app->getBasePath() . '/config/app.php';
+        $config = require $app->getBasePath() . '/config/app.php';
 
-        // support accessing other configuration files:
+        // support accessing other configuration files values:
         // if the requested config var is not exist in the main configuration file (app.php)
-        // then search in the config directory for a config file with the same name as 
-        // the config name
-        if (!array_key_exists($key, $configVariables)) {
+        // then search in the config directory for a configuration file with the same name 
+        // as the config name and return its content
+        if (!array_key_exists($key, $config)) {
             $configFile = sprintf("%s/config/%s.php", $app->getBasePath(), $key);
             if (!file_exists($configFile)) {
                 throw new \LogicException("'$key' configuration variable not exist.");
             }
             $value = require $configFile;
         } else {
-            $value = $configs[$key];
+            $value = $config[$key];
         }
 
         if ($value instanceof \Closure) {
