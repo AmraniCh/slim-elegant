@@ -80,13 +80,6 @@ class App extends SlimApp
         return $this->routesFile;
     }
 
-    public function setFileLoader(FileLoader $fileLoader): self
-    {
-        $this->fileLoader = $fileLoader;
-
-        return $this;
-    }
-
     /**
      * Allows you to add new global variables to be used in the configuration files. 
      */
