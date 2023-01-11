@@ -36,13 +36,16 @@ class FileLoader implements FileLoaderInterface
     /**
      * @throws FileNotExistException
      */
-    private function throwIfNotExist(string $filePath)
+    private function throwIfNotExist(string $filePath): void
     {
         if (!file_exists($filePath)) {
             throw new FileNotExistException($filePath);
         }
     }
 
+    /**
+     * @return mixed
+     */
     private function doRequire(string $filePath, array $variables = [])
     {
         if (!empty($variables)) {
