@@ -19,6 +19,9 @@ class App extends SlimApp
     /** @var FileLoaderInterface */
     private $fileLoader;
 
+    /** @var array */
+    private $globals = [];
+
     /** @var string */
     private $envDirectory;
 
@@ -38,8 +41,14 @@ class App extends SlimApp
 
         $this->fileLoader = $fileLoader ?: new FileLoader;
 
+        // set up global variables that should be available in every configuration file 
+        $this->globals = [
+            'app'       => $this,
+            'container' => $this->getContainer(),
+        ];
+
         if (!$container instanceof ContainerInterface && empty($container)) {
-            $container = $fileLoader->load("$basePath/config/container.php");
+            $container = $this->fileLoader->loadConfiguration("$basePath/config/container.php", $this->globals);
         }
 
         parent::__construct($container);
@@ -52,6 +61,16 @@ class App extends SlimApp
         return $this->basePath;
     }
 
+    public function getFileLoader(): FileLoaderInterface
+    {
+        return $this->fileLoader;
+    }
+
+    public function getGlobals(): array
+    {
+        return $this->globals;
+    }
+
     public function getEnvDirectory(): string
     {
         return $this->envDirectory;
@@ -62,8 +81,29 @@ class App extends SlimApp
         return $this->routesFile;
     }
 
+    public function setFileLoader(FileLoaderInterface $fileLoader): self
+    {
+        $this->fileLoader = $fileLoader;
+
+        return $this;
+    }
+
     /**
-     * Load environment variables from the .env file.
+     * Allows you to add new global variables to be used in the configuration files. 
+     */
+    public function addGlobals(array $variables): self
+    {
+        foreach ($variables as $name => $value) {
+            if (!array_key_exists($name, $this->globals)) {
+                $this->globals[$name] = $value;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Loads environment variables from the .env file.
      *
      * @param string $envDirectory the path of the directory where .env file is located.
      */
@@ -77,13 +117,14 @@ class App extends SlimApp
     }
 
     /**
-     * Reads the application configuration file 'config/app.php' and merge 
-     * the configuration variables with the default Slim container settings.
+     * Loads the application configurations from the 'config/app.php' file
+     * and merge the configs with the Slim container settings so all 
+     * configuration values can be accessed via the container.
      */
     public function loadConfiguration(): self
     {
         $configFile = $this->basePath . '/config/app.php';
-        $configVariables = $this->requireWithVariables($configFile);
+        $configVariables = $this->fileLoader->loadConfiguration($configFile, $this->globals);
         $settings = $this->getContainer()->get("settings");
         $settings->replace(array_merge($settings->all(), $configVariables));
 
@@ -94,7 +135,7 @@ class App extends SlimApp
     {
         $routesFile = $routesFile ?: $this->basePath . '/routes.php';
         $this->routesFile = $routesFile;
-        $this->requireWithVariables($routesFile);
+        $this->fileLoader->load($routesFile, $this->globals);
 
         return $this;
     }
@@ -102,7 +143,7 @@ class App extends SlimApp
     public function loadMiddlewares(): self
     {
         $middlewaresFile = $this->basePath . '/config/middlewares.php';
-        $middlewares = $this->requireWithVariables($middlewaresFile);
+        $middlewares = $this->fileLoader->loadConfiguration($middlewaresFile, $this->globals);
         foreach ($middlewares as $middleware) {
             $this->add($middleware);
         }
@@ -114,20 +155,10 @@ class App extends SlimApp
     {
         $capsule = new Manager;
         $capsule->addConnection($this->getContainer()->get('settings')['database']);
-
         $resolver = new ConnectionResolver(['default' => $capsule->getConnection()]);
         $resolver->setDefaultConnection('default');
-
         Model::setConnectionResolver($resolver);
 
         return $this;
-    }
-
-    private function requireWithVariables(string $filePath): array
-    {
-        return $this->fileLoader->loadWithVariables($filePath, [
-            'app'       => $this,
-            'container' => $this->getContainer(),
-        ]);
     }
 }
