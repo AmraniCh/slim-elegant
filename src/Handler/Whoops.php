@@ -28,10 +28,7 @@ class Whoops extends AbstractHandler
 
 	public function __invoke(Request $request, Response $response, \Throwable $exception): Response
 	{
-		$whoops = new Run();
-
-		$whoops->allowQuit(false);
-		$whoops->writeToOutput(false);
+		$whoops = $this->configureWhoops(new Run);
 
 		$contentType = $this->determineContentType($request);
 
@@ -39,9 +36,9 @@ class Whoops extends AbstractHandler
 		$whoops->pushHandler(new $handler);
 		
 		if ($this->showDetails) {
-			$content = $whoops->handleException($exception);
+			$data = $whoops->handleException($exception);
 		} else {
-			$content = $this->parseResponseBody($contentType, [
+			$data = $this->parseResponseBody($contentType, [
 				'message' => 'Sorry, Something went wrong!',
 				'status'  => 'error'
 			]);
@@ -49,11 +46,13 @@ class Whoops extends AbstractHandler
 
 		return $response->withStatus(500)
 			->withHeader('Content-type', $contentType)
-			->write($content);
+			->write($data);
 	}
 	
 	/**
-	 * Parses a response body according the given content type.
+	 * Parses a response body according to the given content type.
+	 * 
+	 * @param mixed $body
 	 */
 	protected function parseResponseBody(string $contentType, $body): string
 	{
@@ -90,5 +89,17 @@ class Whoops extends AbstractHandler
 			default:
 				return PlainTextHandler::class;
 		}
+	}
+
+	/**
+	 * Configure the giving Whoops instance to be able to handle on your own 
+	 * the generated content from the Whoops handlers.
+	 */
+	protected function configureWhoops(Run $whoops): Run
+	{
+		$whoops->allowQuit(false);
+		$whoops->writeToOutput(false);
+
+		return $whoops;
 	}
 }
