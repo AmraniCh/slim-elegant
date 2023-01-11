@@ -18,6 +18,9 @@ class FileLoader implements FileLoaderInterface
         return $data;
     }
 
+    /**
+     * @throws InvalidFileConfigurationException
+     */
     public function loadConfiguration(string $filePath, array $variables = []): array
     {
         self::throwIfNotExist($filePath);
