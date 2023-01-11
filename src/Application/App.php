@@ -9,14 +9,13 @@ use Psr\Container\ContainerInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\ConnectionResolver;
-use App\Kernel\FileLoader\FileLoaderInterface;
 
 class App extends SlimApp
 {
     /** @var string */
     private $basePath;
 
-    /** @var FileLoaderInterface */
+    /** @var FileLoader */
     private $fileLoader;
 
     /** @var array */
@@ -33,7 +32,7 @@ class App extends SlimApp
      * 
      * @throws \LogicException
      */
-    public function __construct(string $basePath, $container = [], ?FileLoaderInterface $fileLoader = null)
+    public function __construct(string $basePath, $container = [], ?FileLoader $fileLoader = null)
     {
         if (!$basePath || !is_dir($basePath)) {
             throw new \LogicException("The given application base path '$basePath' is invalid or do not exist.");
@@ -61,7 +60,7 @@ class App extends SlimApp
         return $this->basePath;
     }
 
-    public function getFileLoader(): FileLoaderInterface
+    public function getFileLoader(): FileLoader
     {
         return $this->fileLoader;
     }
@@ -81,7 +80,7 @@ class App extends SlimApp
         return $this->routesFile;
     }
 
-    public function setFileLoader(FileLoaderInterface $fileLoader): self
+    public function setFileLoader(FileLoader $fileLoader): self
     {
         $this->fileLoader = $fileLoader;
 

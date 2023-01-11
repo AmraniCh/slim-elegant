@@ -5,9 +5,14 @@ namespace App\Kernel\FileLoader;
 use App\Kernel\FileLoader\Exception\FileNotExistException;
 use App\Kernel\FileLoader\Exception\InvalidFileConfigurationException;
 
-class FileLoader implements FileLoaderInterface
+class FileLoader
 {
 
+    /**
+     * Loads a file and returns its content.
+     * 
+     * @return mixed
+     */
     public function load(string $filePath, array $variables = [])
     {
         self::throwIfNotExist($filePath);
@@ -18,7 +23,11 @@ class FileLoader implements FileLoaderInterface
     }
 
     /**
-     * @throws InvalidFileConfigurationException
+     * Loads a configuration file.
+     * 
+     * @return array
+     * 
+     * @throws InvalidFileConfigurationException throws an exception if the configuration file not returning an array.
      */
     public function loadConfiguration(string $filePath, array $variables = []): array
     {
