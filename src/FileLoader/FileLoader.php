@@ -4,7 +4,6 @@ namespace App\Kernel\FileLoader;
 
 use App\Kernel\FileLoader\Exception\FileNotExistException;
 use App\Kernel\FileLoader\Exception\InvalidFileConfigurationException;
-use App\Kernel\FileLoader\Exception\InvalidFileDataException;
 
 class FileLoader implements FileLoaderInterface
 {
