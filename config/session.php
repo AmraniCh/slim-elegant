@@ -1,5 +1,7 @@
 <?php
 
+// TODO add documentation for each config
+
 return [
 
     'name' => 'PHPSESS',

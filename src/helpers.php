@@ -57,7 +57,7 @@ if (!function_exists('config')) {
             if (!file_exists($configFile)) {
                 throw new \LogicException("'$key' configuration variable not exist.");
             }
-            $value = require $configFile;
+            $value = $app->getFileLoader()->loadConfiguration($configFile, $app->getGlobals());
         } else {
             $value = $config[$key];
         }

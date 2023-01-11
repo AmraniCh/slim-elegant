@@ -10,6 +10,7 @@ class HomeController extends Controller
 {
     public function index(Request $request, Response $response)
     {
+        throw new \Exception("hey!");
         return $this->render($response, 'home');
     }
 }
