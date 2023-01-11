@@ -15,6 +15,8 @@ interface FileLoaderInterface
      * Loads a configuration file.
      * 
      * @return array
+     * 
+     * @throws \Exception throws an exception if the configuration file not returning an array.
      */
     public function loadConfiguration(string $filePath, array $variables = []): array;
 }
