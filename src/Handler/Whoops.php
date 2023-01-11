@@ -11,6 +11,11 @@ use Whoops\Handler\PrettyPageHandler;
 use Whoops\Handler\XmlResponseHandler;
 use Whoops\Handler\JsonResponseHandler;
 
+/**
+ * Custom error handler that processes errors and exceptions using Whoops internally.
+ * 
+ * @link https://github.com/filp/whoops
+ */
 class Whoops extends AbstractHandler
 {
 	/** @var bool */

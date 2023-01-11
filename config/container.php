@@ -14,14 +14,23 @@ return [
 
      //
      
+     /**
+      * @link https://www.slimframework.com/docs/v3/handlers/error.html
+      */
     'errorHandler' => function (): Whoops {
         return new Whoops(config('app_debug'));
     },
 
+    /**
+     * @link https://www.slimframework.com/docs/v3/handlers/php-error.html#custom-php-error-handler
+     */
     'phpErrorHandler' => function (): Whoops {
         return new Whoops(config('app_debug'));
     },
 
+    /**
+     * @link https://www.slimframework.com/docs/v3/handlers/not-found.html
+     */
     'notFoundHandler' => function (): \Closure {
         return function ($request, Slim\Http\Response $response) {
             return $response->withStatus(404)
