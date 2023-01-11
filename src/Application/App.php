@@ -4,16 +4,20 @@ namespace App\Kernel\Application;
 
 use Dotenv\Dotenv;
 use Slim\App as SlimApp;
+use App\Kernel\FileLoader\FileLoader;
 use Psr\Container\ContainerInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\ConnectionResolver;
-use App\Kernel\Application\ApplicationException;
+use App\Kernel\FileLoader\FileLoaderInterface;
 
 class App extends SlimApp
 {
     /** @var string */
     private $basePath;
+
+    /** @var FileLoaderInterface */
+    private $fileLoader;
 
     /** @var string */
     private $envDirectory;
@@ -24,16 +28,18 @@ class App extends SlimApp
     /**
      * @param ContainerInterface|array $container
      * 
-     * @throws ApplicationException
+     * @throws \LogicException
      */
-    public function __construct(string $basePath, $container = [])
+    public function __construct(string $basePath, $container = [], ?FileLoaderInterface $fileLoader = null)
     {
         if (!$basePath || !is_dir($basePath)) {
-            throw new ApplicationException("Given application base path '$basePath' is invalid or do not exist.");
+            throw new \LogicException("The given application base path '$basePath' is invalid or do not exist.");
         }
 
+        $this->fileLoader = $fileLoader ?: new FileLoader;
+
         if (!$container instanceof ContainerInterface && empty($container)) {
-            $container = $this->requireWithVariables("$basePath/config/container.php");
+            $container = $fileLoader->load("$basePath/config/container.php");
         }
 
         parent::__construct($container);
@@ -117,26 +123,11 @@ class App extends SlimApp
         return $this;
     }
 
-    /**
-     * @return mixed
-     * 
-     * @throws ApplicationException
-     */
-    private function requireWithVariables(string $filePath)
+    private function requireWithVariables(string $filePath): array
     {
-        if (!file_exists($filePath)) {
-            throw new ApplicationException("Application file '$filePath' do not exist.");
-        }
-
-        $vars = [
-            'app' => $this,
+        return $this->fileLoader->loadWithVariables($filePath, [
+            'app'       => $this,
             'container' => $this->getContainer(),
-        ];
-
-        foreach ($vars as $name => $value) {
-            ${$name} = $value;
-        }
-
-        return require $filePath;
+        ]);
     }
 }
