@@ -13,7 +13,7 @@ $app->group('', function () use ($app) {
 
     $app
         ->post('/login', function (Request $request, Response $response) use ($app) {
-            return $response->getBody()->write("request from safe origin!");
+            return $response->getBody()->write("request is from safe origin!");
          })
         ->setName('login')
         ->add(new VerifyCrsf);
