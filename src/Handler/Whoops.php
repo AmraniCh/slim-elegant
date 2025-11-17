@@ -12,7 +12,7 @@ use Whoops\Handler\XmlResponseHandler;
 use Whoops\Handler\JsonResponseHandler;
 
 /**
- * Custom error handler that processes errors and exceptions using Whoops internally.
+ * Custom error handler that process errors and exceptions using Whoops internally.
  * 
  * @link https://github.com/filp/whoops
  */
