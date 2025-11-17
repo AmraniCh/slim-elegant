@@ -53,6 +53,8 @@ return [
      * Slim application configuration
      * //////////////////////////////
      * 
+     * Here you can override and change the Slim default settings values.
+     * 
      * @link https://www.slimframework.com/docs/v3/objects/application.html#application-configuration
      */
 
